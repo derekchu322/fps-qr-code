@@ -44,7 +44,7 @@
     <div class="container">
 
         <div id="form" style="padding:25px;">
-            <form>
+            <form action="javascript:genQRCode()">
                 <div class="accordion" id="accordionExample">
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="headingOne">
@@ -99,7 +99,7 @@
                                 <div class="mb-3">
                                     <label for="input_ClearingCode" class="form-label">ClearingCode</label>
                                     <input type="text" class="form-control" id="input_ClearingCode"
-                                        aria-describedby="help_ClearingCode">
+                                        aria-describedby="help_ClearingCode" pattern="^\d{3}$">
                                     <div id="help_ClearingCode" class="form-text">The Clearing Code of the Payee
                                         Participant.
                                     </div>
@@ -107,23 +107,23 @@
                                 <div class="mb-3">
                                     <label for="input_FPSIdentifier" class="form-label">FPSIdentifier</label>
                                     <input type="text" class="form-control" id="input_FPSIdentifier"
-                                        aria-describedby="help_FPSIdentifier">
+                                        aria-describedby="help_FPSIdentifier" pattern="^[0-9]{7}([0-9]{2})*$">
                                     <div id="help_FPSIdentifier" class="form-text">FPS Identifier assigned by the FPS
                                         Addressing
                                         Service. Only one proxy identifier must be present.</div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="input_PhoneNumber" class="form-label">PhoneNumber</label>
-                                    <input type="text" class="form-control" id="input_PhoneNumber"
-                                        aria-describedby="help_PhoneNumber">
-                                    <div id="help_PhoneNumber" class="form-text">Phone number registered in the FPS
+                                    <input type="tel" class="form-control" id="input_PhoneNumber"
+                                        aria-describedby="help_PhoneNumber" pattern="^\+\d{3}-\d{8}[0-9]*$">
+                                    <div id="help_PhoneNumber" class="form-text">Phone number (+[country code]-[phone no]) registered in the FPS
                                         Addressing
                                         Service.
                                         Only one proxy identifier must be present.</div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="input_EmailAddress" class="form-label">EmailAddress</label>
-                                    <input type="text" class="form-control" id="input_EmailAddress"
+                                    <input type="email" class="form-control" id="input_EmailAddress"
                                         aria-describedby="help_EmailAddress">
                                     <div id="help_EmailAddress" class="form-text">Email address registered in the FPS
                                         Addressing
@@ -142,7 +142,7 @@
                                         class="form-label">EditableTransactionAmountIndicator</label>
                                     <input type="text" class="form-control"
                                         id="input_EditableTransactionAmountIndicator"
-                                        aria-describedby="help_EditableTransactionAmountIndicator">
+                                        aria-describedby="help_EditableTransactionAmountIndicator" pattern="^1*$">
                                     <div id="help_EditableTransactionAmountIndicator" class="form-text">Specify “1” when
                                         the
                                         Transaction
@@ -203,7 +203,7 @@
                                     <label for="input_TransactionCurrency"
                                         class="form-label">TransactionCurrency</label>
                                     <input type="text" class="form-control" id="input_TransactionCurrency"
-                                        aria-describedby="help_TransactionCurrency" value="344">
+                                        aria-describedby="help_TransactionCurrency" value="344" pattern="^(344|156)$">
                                     <div id="help_TransactionCurrency" class="form-text">A numeric code based on
                                         [ISO4217]. Only
                                         HKD (“344”)
@@ -212,7 +212,7 @@
                                 <div class="mb-3">
                                     <label for="input_TransactionAmount" class="form-label">TransactionAmount</label>
                                     <input type="text" class="form-control" id="input_TransactionAmount"
-                                        aria-describedby="help_TransactionAmount">
+                                        aria-describedby="help_TransactionAmount" pattern="^[0-9.]*$">
                                     <div id="help_TransactionAmount" class="form-text">e.g. “99.34”</div>
                                 </div>
                             </div>
@@ -250,7 +250,7 @@
                 </div>
                 <div>
                     <br>
-                    <button type="button" class="btn btn-primary" onclick="genQRCode()">Submit</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </form>
             <div id="qrcode" style="padding:25px;"></div>
@@ -262,6 +262,7 @@
     <script>
 
         function genQRCode() {
+            
             fps_message = {
                 "PayloadFormatIndicator": $("#input_PayloadFormatIndicator").val(),
                 "PointofInitiationMethod": $("#input_PointofInitiationMethod").val(),
