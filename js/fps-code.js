@@ -57,7 +57,6 @@ function visitObjectNodes(data, name) {
     }, []);
 }
 
-// 
 function genPayload(fps_message_obj) {
     msg = visitObjectNodes(fps_message_obj).join("");
     msg += id_dict["CRC"]+"04";
