@@ -357,6 +357,12 @@
                         } else {
                             $("#input_EditableTransactionAmountIndicator")[0].setCustomValidity("");
                         }
+                        if (($("#input_LanguagePreference").val() != "" && $("#input_AltMerchantName").val() != "") || 
+                            ($("#input_LanguagePreference").val() == "" && $("#input_AltMerchantName").val() == "")) {
+                            $("#input_LanguagePreference")[0].setCustomValidity("");
+                        } else {
+                            $("#input_LanguagePreference")[0].setCustomValidity("Invalid");
+                        }
                         if (!form.checkValidity()) {
                             event.preventDefault();
                             event.stopPropagation();
