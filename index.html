@@ -111,7 +111,8 @@
                                     <label for="input_PhoneNumber" class="form-label">PhoneNumber</label>
                                     <input type="tel" class="form-control" id="input_PhoneNumber"
                                         aria-describedby="help_PhoneNumber" pattern="^\+\d{3}-\d{8}[0-9]*$">
-                                    <div id="help_PhoneNumber" class="form-text">Phone number (+[country code]-[phone no]) registered in the FPS
+                                    <div id="help_PhoneNumber" class="form-text">Phone number (+[country code]-[phone
+                                        no]) registered in the FPS
                                         Addressing
                                         Service.
                                         Only one proxy identifier must be present.</div>
@@ -128,7 +129,8 @@
                                     <label for="input_MerchantTimeoutTime"
                                         class="form-label">MerchantTimeoutTime</label>
                                     <input type="text" class="form-control" id="input_MerchantTimeoutTime"
-                                        aria-describedby="help_MerchantTimeoutTime" pattern="^([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])(2[0-3]|[01][0-9])([0-5][0-9])([0-5][0-9])$">
+                                        aria-describedby="help_MerchantTimeoutTime"
+                                        pattern="^([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])(2[0-3]|[01][0-9])([0-5][0-9])([0-5][0-9])$">
                                     <div id="help_MerchantTimeoutTime" class="form-text">Specify in the format of
                                         “yymmddhhmmss”.</div>
                                 </div>
@@ -221,13 +223,14 @@
                             </button>
                         </h2>
                         <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour"
-                        data-bs-parent="#accordionExample">
+                            data-bs-parent="#accordionExample">
                             <div class="accordion-body">
                                 <div class="mb-3">
                                     <label for="input_LanguagePreference" class="form-label">LanguagePreference</label>
                                     <input type="text" class="form-control" id="input_LanguagePreference"
                                         aria-describedby="help_LanguagePreference">
-                                    <div id="help_LanguagePreference" class="form-text">The Language Preference field (ID “00”) shall contain 2 alphabetical characters coded
+                                    <div id="help_LanguagePreference" class="form-text">The Language Preference field
+                                        (ID “00”) shall contain 2 alphabetical characters coded
                                         to a value defined by [ISO 639].</div>
                                 </div>
                                 <div class="mb-3">
@@ -306,8 +309,8 @@
                 "MerchantCity": $("#input_MerchantCity").val(),
                 "TransactionCurrency": $("#input_TransactionCurrency").val(),
                 "TransactionAmount": $("#input_TransactionAmount").val(),
-                "MerchantInformationLanguageTemplate" : {
-                    "LanguagePreference" : $("#input_LanguagePreference").val(),
+                "MerchantInformationLanguageTemplate": {
+                    "LanguagePreference": $("#input_LanguagePreference").val(),
                     "MechantName": $("#input_AltMerchantName").val(),
                     "MerchantCity": $('#input_AltMerchantCity').val()
                 },
@@ -325,10 +328,9 @@
                 height: 256,
                 colorDark: "#4c6fae",
                 colorLight: "#ffffff",
-                correctLevel : QRCode.CorrectLevel.H
+                correctLevel: QRCode.CorrectLevel.H
             };
             // Create QRCode Object
-            $("#qrcode").empty();
             var qrcode = new QRCode(document.getElementById("qrcode"), options);
         }
     </script>
@@ -343,37 +345,52 @@
                 // Loop over them and prevent submission
                 var validation = Array.prototype.filter.call(forms, function (form) {
                     form.addEventListener('submit', function (event) {
-                        if (form.checkValidity() === false) {
+                        var c = true;
+                        [$("#input_FPSIdentifier")[0], $("#input_PhoneNumber")[0], $("#input_EmailAddress")[0]].forEach(function (o, i, a) {
+                            c = c && checkExclusive(o, a, true);
+                        });
+                        [$("#input_BillNumber")[0], $("#input_ReferenceLabel")[0]].forEach(function (o, i, a) {
+                            c = c && checkExclusive(o, a, false);
+                        });
+                        if ($("#input_EditableTransactionAmountIndicator").val() == "1" && $("#input_TransactionAmount").val() == "") {
+                            $("#input_EditableTransactionAmountIndicator")[0].setCustomValidity("Invalid.");
+                        } else {
+                            $("#input_EditableTransactionAmountIndicator")[0].setCustomValidity("");
+                        }
+                        if (!form.checkValidity()) {
                             event.preventDefault();
                             event.stopPropagation();
                         }
                         form.classList.add('was-validated');
+                        $("#qrcode").empty();
                     }, false);
                 });
             }, false);
         })();
 
-        function checkExclusive(control, controls) {
+        [ $("#input_FPSIdentifier"), 
+          $("#input_PhoneNumber"), 
+          $("#input_EmailAddress"),
+          $("#input_BillNumber"), 
+          $("#input_ReferenceLabel") ].forEach(function (o, i, a) {
+            o.change(function() { this.setCustomValidity(""); });
+        });
+
+        function checkExclusive(control, controls, mandatory) {
             var x = ""
-            controls.forEach(function(object,index,array){ 
-                object.setCustomValidity(""); 
-                x+=object.value;});
-            if (control.value != "" && control.value != x) {
-                control.setCustomValidity("Invalid.");                
+            controls.forEach(function (object, index, array) {
+                object.setCustomValidity("");
+                x += object.value;
+            });
+            if ((control.value != "" && control.value != x) ||
+                (mandatory == true && x == "")) {
+                control.setCustomValidity("Invalid.");
+                return false;
             }
+            return true;
         }
 
-        [document.getElementById("input_FPSIdentifier"), document.getElementById("input_PhoneNumber"), document.getElementById("input_EmailAddress")].forEach(function (o, i, a) {
-            o.addEventListener('change', function (e) {
-                checkExclusive(o, a);
-            });
-        });
 
-        [document.getElementById("input_BillNumber"),document.getElementById("input_ReferenceLabel")].forEach(function (o, i, a) {
-            o.addEventListener('change', function (e) {
-                checkExclusive(o, a);
-            });
-        });
 
     </script>
 </body>
