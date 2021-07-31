@@ -15,6 +15,11 @@ const id_dict = {
     "CountryCode": "58",
     "MerchantName": "59",
     "MerchantCity": "60",
+    "PostalCode": "61",
+    "MerchantInformationLanguageTemplate": "64",
+    "MerchantInformationLanguageTemplate.LanguagePreference": "00",
+    "MerchantInformationLanguageTemplate.MechantName": "01",
+    "MerchantInformationLanguageTemplate.MerchantCity": "02",
     "AdditionalDataFieldTemplate": "62",
     "AdditionalDataFieldTemplate.BillNumber": "01",
     "AdditionalDataFieldTemplate.ReferenceLabel": "05",
@@ -61,6 +66,7 @@ function genPayload(fps_message_obj) {
     msg = visitObjectNodes(fps_message_obj).join("");
     msg += id_dict["CRC"]+"04";
     var crc = crc16(msg).toString(16).pad(4).toUpperCase();
+    console.log(msg+crc);
     return (msg + crc);
 }
 
